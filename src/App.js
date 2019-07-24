@@ -1,0 +1,44 @@
+import React, { Component } from 'react';
+import './App.css';
+import SeasonDisplay from './SeasonDisplay'
+import Loader from './Loader'
+import ErrorPage from './ErrorPage'
+
+class App extends Component {
+  state = {
+    lat: null,
+    errMessage: ''
+  }
+  componentDidMount() {
+    window.navigator.geolocation.getCurrentPosition(
+      position => this.setState({ lat: position.coords.latitude }),
+      err => this.setState({ errMessage: err.message })
+    );
+  }
+
+  render() {
+    if (this.state.lat && !this.state.errMessage) {
+      return (
+        <div>
+          <SeasonDisplay lat={this.state.lat} />
+        </div>
+      );
+    }
+    if (!this.state.lat && this.state.errMessage) {
+      return (
+        <div>
+          <ErrorPage Error={this.state.errMessage} />
+        </div>
+
+
+      );
+    }
+
+    return (
+      <Loader message="please accept location request..." />
+    )
+  }
+
+}
+
+export default App;

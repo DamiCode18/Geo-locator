@@ -7,9 +7,16 @@ import ErrorPage from './ErrorPage'
 class App extends Component {
   state = {
     lat: null,
-    errMessage: ''
+    errMessage: '',
+    time: new Date().toLocaleTimeString()
   }
+
   componentDidMount() {
+
+    setInterval(() => {
+      this.setState({ time: new Date().toLocaleTimeString() })
+    }, 1000)
+
     window.navigator.geolocation.getCurrentPosition(
       position => this.setState({ lat: position.coords.latitude }),
       err => this.setState({ errMessage: err.message })
@@ -20,7 +27,7 @@ class App extends Component {
     if (this.state.lat && !this.state.errMessage) {
       return (
         <div>
-          <SeasonDisplay lat={this.state.lat} />
+          <SeasonDisplay lat={this.state.lat} time={this.state.time} />
         </div>
       );
     }
@@ -29,8 +36,6 @@ class App extends Component {
         <div>
           <ErrorPage Error={this.state.errMessage} />
         </div>
-
-
       );
     }
 
